@@ -5,7 +5,7 @@ import { logoutUser } from '../Auth';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-const NavBar = ({ isAuthLoading, setIsAuthloading }) => {
+const NavBar = ({ isAuthLoading, setIsAuthLoading }) => {
     const [userToken, setUserToken] = useState("")
     const navigate = useNavigate();
 
@@ -34,11 +34,17 @@ const NavBar = ({ isAuthLoading, setIsAuthloading }) => {
                 {userToken &&
                     <>
                         <span><strong>You Are Logged In</strong></span>
-                        <button onClick={() => {
-                            logoutUser();
-                            setUserToken("");
-                            navigate('/');
-                        }}>Logout</button>
+                        <button
+                            onClick={async () => {
+                                setIsAuthLoading(true);
+                                const logoutSuccess = await logoutUser();
+                                if (logoutSuccess) {
+                                    setIsAuthLoading(false);
+                                }
+                            }}
+                        >
+                            Logout
+                        </button>
                     </>}
             </nav>
             <Outlet />
